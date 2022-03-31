@@ -1,1 +1,5 @@
-# Spring-MVC-1-Inflearn
+# 스프링 MVC 1편 - 백엔드 웹 개발 핵심 기술
+  * 인프런 강의 수강 (업무활용)
+  * https://www.inflearn.com/course/스프링-mvc-1
+
+## **웹 애플리케이션 이해**
