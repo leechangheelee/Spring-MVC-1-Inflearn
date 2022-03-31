@@ -3,3 +3,4 @@
   * https://www.inflearn.com/course/스프링-mvc-1
 
 ## **웹 애플리케이션 이해**
+  * https://github.com/leechangheelee/Spring-MVC-1-Inflearn/blob/main/웹-애플리케이션-이해.md
