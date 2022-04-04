@@ -722,3 +722,16 @@
     ![image](https://user-images.githubusercontent.com/79301439/161536189-8cecbfb7-5218-45a6-b698-6505b1d459f4.png)
     
     ![image](https://user-images.githubusercontent.com/79301439/161536415-ccd522f0-81b5-46a9-92da-5560b1174089.png)
+
+***
+  * MVC 패턴 - 한계
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161538272-78f02afb-2952-4c64-9724-bc2d945abe80.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161538331-495eb4a2-ed47-4299-8acd-daea084830b7.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161538377-621394b3-f247-4139-a81f-785680056842.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161538547-357571c8-4fdc-4c7e-8706-617163a8b05b.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161538609-f1fe620c-022b-492d-91be-e5c925974185.png)
