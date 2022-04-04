@@ -513,3 +513,15 @@
     
     ![image](https://user-images.githubusercontent.com/79301439/161511901-2810b63f-e537-4cdc-aeb9-5eb3a0d25e0c.png)
 
+***
+  * MVC 패턴 - 개요
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161517139-c0762410-5e57-4bd2-b01d-da645cbdd1e1.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161517454-33a2ad3b-4e1c-401c-9281-c9bc56bb9706.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161517501-9fe8dba4-d424-4639-b53f-b0bb4b9060f2.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161517611-bfa19b44-8806-4d38-837a-5f477e261607.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161517657-18565fba-0fea-4bda-ad25-f9e1df6cbe1d.png)
