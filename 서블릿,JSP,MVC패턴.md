@@ -396,3 +396,120 @@
     </body>
     </html>
     ```
+
+***
+  * JSP로 회원 관리 웹 애플리케이션 만들기
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161511082-c6855c09-b413-4495-a645-980ca84c0b9d.png)
+    
+    ```gradle
+    //JSP 추가 시작
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+    implementation 'javax.servlet:jstl'
+    //JSP 추가 끝
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161511177-2189c564-85e4-46de-80f6-0590465aa3ee.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161511246-81fbe806-3dbb-4439-a680-0aa752cb6865.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161511334-60bab13b-5254-404b-a0d7-a9a423f5b49a.png)
+    
+    ```jsp
+    <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+    <html>
+    <head>
+        <title>Title</title>
+    </head>
+    <body>
+    <form action="/jsp/members/save.jsp" method="post">
+        username: <input type="text" name="username" />
+        age: <input type="text" name="age" />
+        <button type="submit">전송</button>
+    </form>
+    </body>
+    </html>
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161511482-0e5483a8-a515-4d9e-97f0-345fa8a8abfc.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161511519-9241c884-5105-4742-ab10-3494e0b6118a.png)
+    
+    ```jsp
+    <%@ page import="hello.servlet.domain.member.MemberRepository" %>
+    <%@ page import="hello.servlet.domain.member.Member" %>
+    <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+    <%
+        //request, response 사용 가능
+        MemberRepository memberRepository = MemberRepository.getInstance();
+
+        System.out.println("save.jsp");
+        String username = request.getParameter("username");
+        int age = Integer.parseInt(request.getParameter("age"));
+
+        Member member = new Member(username, age);
+        System.out.println("member = " + member);
+        memberRepository.save(member);
+    %>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+    성공
+    <ul>
+        <li>id=<%=member.getId()%></li>
+        <li>username=<%=member.getUsername()%></li>
+        <li>age=<%=member.getAge()%></li>
+    </ul>
+    <a href="/index.html">메인</a>
+    </body>
+    </html>
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161511607-6f7b3cf0-0df3-413c-94df-7c39806ab6a5.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161511652-771e8df1-0b3e-49b2-9c0f-9a21c1de116a.png)
+    
+    ```jsp
+    <%@ page import="java.util.List" %>
+    <%@ page import="hello.servlet.domain.member.MemberRepository" %>
+    <%@ page import="hello.servlet.domain.member.Member" %>
+    <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+    <%
+        MemberRepository memberRepository = MemberRepository.getInstance();
+        List<Member> members = memberRepository.findAll();
+    %>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+    <a href="/index.html">메인</a>
+    <table>
+        <thead>
+        <th>id</th>
+        <th>username</th>
+        <th>age</th>
+        </thead>
+        <tbody>
+        <%
+            for (Member member : members) {
+                out.write("    <tr>");
+                out.write("        <td>" + member.getId() + "</td>");
+                out.write("        <td>" + member.getUsername() + "</td>");
+                out.write("        <td>" + member.getAge() + "</td>");
+                out.write("    </tr>");
+            }
+        %>
+        </tbody>
+    </table>
+    </body>
+    </html>
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161511823-e278ccc8-916c-4d4d-bc31-3ab20ee90fa7.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161511901-2810b63f-e537-4cdc-aeb9-5eb3a0d25e0c.png)
+
