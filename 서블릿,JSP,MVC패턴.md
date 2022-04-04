@@ -525,3 +525,200 @@
     ![image](https://user-images.githubusercontent.com/79301439/161517611-bfa19b44-8806-4d38-837a-5f477e261607.png)
     
     ![image](https://user-images.githubusercontent.com/79301439/161517657-18565fba-0fea-4bda-ad25-f9e1df6cbe1d.png)
+
+***
+  * MVC 패턴 - 적용
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161534698-2653a0be-ec6e-4eae-b318-e342b7c1e7c2.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161534760-e4eadbd1-a551-4d0c-8548-d08bc1550b67.png)
+    
+    ```java
+    package hello.servlet.web.servletmvc;
+
+    import javax.servlet.RequestDispatcher;
+    import javax.servlet.ServletException;
+    import javax.servlet.annotation.WebServlet;
+    import javax.servlet.http.HttpServlet;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+
+    @WebServlet(name = "mvcMemberFormServlet", urlPatterns = "/servlet-mvc/members/new-form")
+    public class MvcMemberFormServlet extends HttpServlet {
+
+        @Override
+        protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            String viewPath = "/WEB-INF/views/new-form.jsp";
+            RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath); //Controller에서 View로 이동할 때 사용
+            dispatcher.forward(request, response);
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161534973-438441b4-c97a-44f0-aeb8-dfda8cd63cc8.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161535078-0c18a388-2dd8-47fc-96ae-488c2cb904f0.png)
+    
+    ```jsp
+    <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+
+    <!-- 상대경로 사용, [현재 URL이 속한 계층 경로 + /save] -->
+    <form action="save" method="post">
+        username: <input type="text" name="username" />
+        age: <input type="text" name="age" />
+        <button type="submit">전송</button>
+    </form>
+    </body>
+    </html>
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161535200-8d2c3196-80f9-4e49-bc71-e945e6c15787.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161535362-f216b559-e004-4bbf-90d4-23d78fea261e.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161535399-9521f3d3-2a28-42e0-9a99-0d9987c058ab.png)
+    
+    ```java
+    package hello.servlet.web.servletmvc;
+
+    import hello.servlet.domain.member.Member;
+    import hello.servlet.domain.member.MemberRepository;
+
+    import javax.servlet.RequestDispatcher;
+    import javax.servlet.ServletException;
+    import javax.servlet.annotation.WebServlet;
+    import javax.servlet.http.HttpServlet;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+
+    @WebServlet(name = "mvcMemberSaveServlet", urlPatterns = "/servlet-mvc/members/save")
+    public class MvcMemberSaveServlet extends HttpServlet {
+
+        private MemberRepository memberRepository = MemberRepository.getInstance();
+
+        @Override
+        protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+            String username = request.getParameter("username");
+            int age = Integer.parseInt(request.getParameter("age"));
+
+            Member member = new Member(username, age);
+            memberRepository.save(member);
+
+            //Model에 데이터를 보관한다.
+            request.setAttribute("member", member);
+
+            String viewPath = "/WEB-INF/views/save-result.jsp";
+            RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
+            dispatcher.forward(request, response);
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161535555-3e34140d-87fb-430e-bd35-c179c4573eb6.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161535609-13191340-c386-4753-b0b9-9e244192d84e.png)
+    
+    ```jsp
+    <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+    성공
+    <ul>
+        <li>id=${member.id}</li>
+        <li>username=${member.username}</li>
+        <li>age=${member.age}</li>
+    </ul>
+    <a href="/index.html">메인</a>
+    </body>
+    </html>
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161535722-2a96411f-611e-41da-b823-101152a51c84.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161535778-d11a1038-b079-432e-904b-ea5730baeaa0.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161535819-06f2eca3-4ae3-4c33-9059-73ad07332e61.png)
+    
+    ```java
+    package hello.servlet.web.servletmvc;
+
+    import hello.servlet.domain.member.Member;
+    import hello.servlet.domain.member.MemberRepository;
+
+    import javax.servlet.RequestDispatcher;
+    import javax.servlet.ServletException;
+    import javax.servlet.annotation.WebServlet;
+    import javax.servlet.http.HttpServlet;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+    import java.util.List;
+
+    @WebServlet(name = "mvcMemberListServlet", urlPatterns = "/servlet-mvc/members")
+    public class MvcMemberListServlet extends HttpServlet {
+
+        private MemberRepository memberRepository = MemberRepository.getInstance();
+
+        @Override
+        protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+            List<Member> members = memberRepository.findAll();
+
+            request.setAttribute("members", members);
+
+            String viewPath = "/WEB-INF/views/members.jsp";
+            RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
+            dispatcher.forward(request, response);
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161535935-1bd5fd73-d8c4-425e-9379-7296cda75247.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161535972-50349a64-b00b-435d-92ca-1c8b79805743.png)
+    
+    ```jsp
+    <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+    <a href="/index.html">메인</a>
+    <table>
+        <thead>
+        <th>id</th>
+        <th>username</th>
+        <th>age</th>
+        </thead>
+        <tbody>
+        <c:forEach var="item" items="${members}">
+            <tr>
+                <td>${item.id}</td>
+                <td>${item.username}</td>
+                <td>${item.age}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+    </body>
+    </html>
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161536189-8cecbfb7-5218-45a6-b698-6505b1d459f4.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161536415-ccd522f0-81b5-46a9-92da-5560b1174089.png)
