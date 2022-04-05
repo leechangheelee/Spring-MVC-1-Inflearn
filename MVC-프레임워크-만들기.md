@@ -803,3 +803,193 @@
     ![image](https://user-images.githubusercontent.com/79301439/161699739-6292a395-3e60-45c5-9754-2eb0dfe3d408.png)
     
     ![image](https://user-images.githubusercontent.com/79301439/161699875-b052ebab-c99c-496a-908b-c52da2aba84b.png)
+
+***
+  * 유연한 컨트롤러1 - v5
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161716615-ba8b4035-1f96-431a-9d69-10ab0a94368a.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161716664-1663189f-3f94-4a63-8e06-2cb3785149ef.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161716917-ba2dc863-fc94-430f-a903-6faf40531311.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161716973-41d053c2-69ce-4315-baeb-5dfa33d07aca.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v5;
+
+    import hello.servlet.web.frontcontroller.ModelView;
+
+    import javax.servlet.ServletException;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+
+    public interface MyHandlerAdapter {
+
+        boolean supports(Object handler);
+
+        ModelView handle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException, IOException;
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161717222-5801978a-5c12-4cee-8e99-d01f8eff4115.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161717289-0477a407-14d1-4906-9e1b-7c8bfcfc5927.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v5.adapter;
+
+    import hello.servlet.web.frontcontroller.ModelView;
+    import hello.servlet.web.frontcontroller.v3.ControllerV3;
+    import hello.servlet.web.frontcontroller.v5.MyHandlerAdapter;
+
+    import javax.servlet.ServletException;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+    import java.util.HashMap;
+    import java.util.Map;
+
+    public class ControllerV3HandlerAdapter implements MyHandlerAdapter {
+
+        @Override
+        public boolean supports(Object handler) {
+            return (handler instanceof ControllerV3);
+        }
+
+        @Override
+        public ModelView handle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException, IOException {
+            ControllerV3 controller = (ControllerV3) handler;
+
+            Map<String, String> paramMap = createParamMap(request);
+            ModelView mv = controller.process(paramMap);
+
+            return mv;
+        }
+
+        private Map<String, String> createParamMap(HttpServletRequest request) {
+            Map<String, String> paramMap = new HashMap<>();
+            request.getParameterNames().asIterator()
+                    .forEachRemaining(paramName -> paramMap.put(paramName, request.getParameter(paramName)));
+            return paramMap;
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161717573-e0e4a546-bc82-4533-bc10-d85aff55543c.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161717629-cff65691-db7c-4614-82ee-64cb97259bdd.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v5;
+
+    import hello.servlet.web.frontcontroller.ModelView;
+    import hello.servlet.web.frontcontroller.MyView;
+    import hello.servlet.web.frontcontroller.v3.controller.MemberFormControllerV3;
+    import hello.servlet.web.frontcontroller.v3.controller.MemberListControllerV3;
+    import hello.servlet.web.frontcontroller.v3.controller.MemberSaveControllerV3;
+    import hello.servlet.web.frontcontroller.v5.adapter.ControllerV3HandlerAdapter;
+
+    import javax.servlet.ServletException;
+    import javax.servlet.annotation.WebServlet;
+    import javax.servlet.http.HttpServlet;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+    import java.util.ArrayList;
+    import java.util.HashMap;
+    import java.util.List;
+    import java.util.Map;
+
+    @WebServlet(name = "frontControllerServletV5", urlPatterns = "/front-controller/v5/*")
+    public class FrontControllerServletV5 extends HttpServlet {
+
+        private final Map<String, Object> handlerMappingMap = new HashMap<>();
+        private final List<MyHandlerAdapter> handlerAdapters = new ArrayList<>();
+
+        public FrontControllerServletV5() {
+            initHandlerMappingMap();
+            initHandlerAdapters();
+        }
+
+        private void initHandlerMappingMap() {
+            handlerMappingMap.put("/front-controller/v5/v3/members/new-form", new MemberFormControllerV3());
+            handlerMappingMap.put("/front-controller/v5/v3/members/save", new MemberSaveControllerV3());
+            handlerMappingMap.put("/front-controller/v5/v3/members", new MemberListControllerV3());
+        }
+
+        private void initHandlerAdapters() {
+            handlerAdapters.add(new ControllerV3HandlerAdapter());
+        }
+
+        @Override
+        protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+            Object handler = getHandler(request);
+
+            if (handler == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+
+            MyHandlerAdapter adapter = getHandlerAdapter(handler);
+
+            ModelView mv = adapter.handle(request, response, handler);
+
+
+            String viewName = mv.getViewName();
+            MyView view = viewResolver(viewName);
+
+            view.render(mv.getModel(), request, response);
+        }
+
+        private MyView viewResolver(String viewName) {
+            return new MyView("/WEB-INF/views/" + viewName + ".jsp");
+        }
+
+        private MyHandlerAdapter getHandlerAdapter(Object handler) {
+            for (MyHandlerAdapter adapter : handlerAdapters) {
+                if (adapter.supports(handler)) {
+                    return adapter;
+                }
+            }
+
+            throw new IllegalArgumentException("handler adapter를 찾을 수 없습니다. handler=" + handler);
+        }
+
+        private Object getHandler(HttpServletRequest request) {
+            String requestURI = request.getRequestURI();
+            return handlerMappingMap.get(requestURI);
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161717847-d2b9be35-0ad7-4bc3-9cc6-4a259bcb9360.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161718039-06687db0-7ed3-4eaf-ba42-c76907bf7eb9.png)
+    
+    ```java
+    private Object getHandler(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        return handlerMappingMap.get(requestURI);
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161718197-fbb728bf-c988-43a6-b1fd-b673f67ece16.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161718278-29db5ef7-0569-4ea2-abad-8a3098af3d95.png)
+    
+    ```java
+    for (MyHandlerAdapter adapter : handlerAdapters) {
+        if (adapter.supports(handler)) {
+            return adapter;
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161718421-0104364e-ab37-4026-ae6e-31fba51032c2.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161718509-5a9fc5aa-f93a-4074-a236-d098a7e98162.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161718566-4ba38b5f-3c89-44f9-a19d-d5114ebcb989.png)
