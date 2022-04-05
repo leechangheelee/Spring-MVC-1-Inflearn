@@ -176,3 +176,205 @@
     ```
     
     ![image](https://user-images.githubusercontent.com/79301439/161671070-39183d95-582d-4032-ab44-96e4b43cccbf.png)
+
+***
+  * View 분리 - v2
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161678525-ec9e989d-56ca-465d-bd37-f78dd451f7b8.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161678556-06d65e99-f846-4dc2-9e52-bbf8d8cbf4c3.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161678583-00c3e81d-d243-4703-a4b5-ec760c2f9503.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller;
+
+    import javax.servlet.RequestDispatcher;
+    import javax.servlet.ServletException;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+
+    public class MyView {
+
+        private String viewPath;
+
+        public MyView(String viewPath) {
+            this.viewPath = viewPath;
+        }
+
+        public void render(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
+            dispatcher.forward(request, response);
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161678636-3b0b706f-6f84-414b-8494-ee04f2522348.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161678673-acd8cb3b-9205-43c1-bb12-9fc7a95ccbdf.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v2;
+
+    import hello.servlet.web.frontcontroller.MyView;
+
+    import javax.servlet.ServletException;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+
+    public interface ControllerV2 {
+
+        MyView process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161678724-c687e6aa-17a1-4b5c-96b1-7d46a70ec67f.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v2.controller;
+
+    import hello.servlet.web.frontcontroller.MyView;
+    import hello.servlet.web.frontcontroller.v2.ControllerV2;
+
+    import javax.servlet.ServletException;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+
+    public class MemberFormControllerV2 implements ControllerV2 {
+
+        @Override
+        public MyView process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            return new MyView("/WEB-INF/views/new-form.jsp");
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161678815-460b8b06-1b30-4004-8572-e171643f60f1.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161678832-ae178ccd-f78b-4c36-90da-38db24dfa2e2.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v2.controller;
+
+    import hello.servlet.domain.member.Member;
+    import hello.servlet.domain.member.MemberRepository;
+    import hello.servlet.web.frontcontroller.MyView;
+    import hello.servlet.web.frontcontroller.v2.ControllerV2;
+
+    import javax.servlet.ServletException;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+
+    public class MemberSaveControllerV2 implements ControllerV2 {
+
+        private MemberRepository memberRepository = MemberRepository.getInstance();
+
+        @Override
+        public MyView process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+            String username = request.getParameter("username");
+            int age = Integer.parseInt(request.getParameter("age"));
+
+            Member member = new Member(username, age);
+            memberRepository.save(member);
+
+            request.setAttribute("member", member);
+
+            return new MyView("/WEB-INF/views/save-result.jsp");
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161678895-ee2b1a02-e90b-4944-8dda-91ccc187b827.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v2.controller;
+
+    import hello.servlet.domain.member.Member;
+    import hello.servlet.domain.member.MemberRepository;
+    import hello.servlet.web.frontcontroller.MyView;
+    import hello.servlet.web.frontcontroller.v2.ControllerV2;
+
+    import javax.servlet.ServletException;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+    import java.util.List;
+
+    public class MemberListControllerV2 implements ControllerV2 {
+
+        private MemberRepository memberRepository = MemberRepository.getInstance();
+
+        @Override
+        public MyView process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+            List<Member> members = memberRepository.findAll();
+            request.setAttribute("members", members);
+            return new MyView("/WEB-INF/views/members.jsp");
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161678963-39be208e-44f3-46ce-8780-110fb07f20e2.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v2;
+
+    import hello.servlet.web.frontcontroller.MyView;
+    import hello.servlet.web.frontcontroller.v2.controller.MemberFormControllerV2;
+    import hello.servlet.web.frontcontroller.v2.controller.MemberListControllerV2;
+    import hello.servlet.web.frontcontroller.v2.controller.MemberSaveControllerV2;
+
+    import javax.servlet.ServletException;
+    import javax.servlet.annotation.WebServlet;
+    import javax.servlet.http.HttpServlet;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+    import java.util.HashMap;
+    import java.util.Map;
+
+    @WebServlet(name = "frontControllerServletV2", urlPatterns = "/front-controller/v2/*")
+    public class FrontControllerServletV2 extends HttpServlet {
+
+        private Map<String, ControllerV2> controllerMap = new HashMap<>();
+
+        public FrontControllerServletV2() {
+            controllerMap.put("/front-controller/v2/members/new-form", new MemberFormControllerV2());
+            controllerMap.put("/front-controller/v2/members/save", new MemberSaveControllerV2());
+            controllerMap.put("/front-controller/v2/members", new MemberListControllerV2());
+        }
+
+        @Override
+        protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+            String requestURI = request.getRequestURI();
+
+            ControllerV2 controller = controllerMap.get(requestURI);
+            if (controller == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+
+            MyView view = controller.process(request, response);
+            view.render(request, response);
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161679052-5bc8a9b8-af39-4d68-856c-04deacc08ea4.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161679073-a02cf6dc-1406-4fc2-9995-4c1657b17525.png)
+    
+    ```java
+    public void render(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
+        dispatcher.forward(request, response);
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161679135-7a497c01-6cae-4fa4-8861-ab1a1c5b9c38.png)
