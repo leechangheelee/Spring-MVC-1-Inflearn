@@ -378,3 +378,255 @@
     ```
     
     ![image](https://user-images.githubusercontent.com/79301439/161679135-7a497c01-6cae-4fa4-8861-ab1a1c5b9c38.png)
+
+***
+  * Model 추가 - v3
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161691499-fadfb790-264e-4056-a8a6-d4c993f7660f.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161691548-d3602303-8151-4808-b8bc-4d44ccb4dcc1.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161691639-9aa88179-b0f4-44b5-9760-9d29e0e102e0.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161691675-94a93df1-04ba-4657-bf9c-9f1b7e26d16b.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller;
+
+    import java.util.HashMap;
+    import java.util.Map;
+
+    public class ModelView {
+        private String viewName;
+        private Map<String, Object> model = new HashMap<>();
+
+        public ModelView(String viewName) {
+            this.viewName = viewName;
+        }
+
+        public String getViewName() {
+            return viewName;
+        }
+
+        public void setViewName(String viewName) {
+            this.viewName = viewName;
+        }
+
+        public Map<String, Object> getModel() {
+            return model;
+        }
+
+        public void setModel(Map<String, Object> model) {
+            this.model = model;
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161691954-be086a5b-d158-4f0d-81a2-26e86f6a8c03.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161691980-0ae61df1-6c0b-406e-aef9-46f861164c10.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v3;
+
+    import hello.servlet.web.frontcontroller.ModelView;
+
+    import java.util.Map;
+
+    public interface ControllerV3 {
+
+        ModelView process(Map<String, String> paraMap);
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161692048-12feaa91-485a-49ae-bfd4-07bac41bfc82.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161692114-47063a95-b5f4-4357-a908-3cff22bac2c4.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v3.controller;
+
+    import hello.servlet.web.frontcontroller.ModelView;
+    import hello.servlet.web.frontcontroller.v3.ControllerV3;
+
+    import java.util.Map;
+
+    public class MemberFormControllerV3 implements ControllerV3 {
+
+        @Override
+        public ModelView process(Map<String, String> paraMap) {
+            return new ModelView("new-form");
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161692267-d96e550d-aa70-4a2f-a8c7-71e2f21324c8.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161692307-c515f5e3-43fe-4f0d-b965-0c447562bbfc.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v3.controller;
+
+    import hello.servlet.domain.member.Member;
+    import hello.servlet.domain.member.MemberRepository;
+    import hello.servlet.web.frontcontroller.ModelView;
+    import hello.servlet.web.frontcontroller.v3.ControllerV3;
+
+    import java.util.Map;
+
+    public class MemberSaveControllerV3 implements ControllerV3 {
+
+        private MemberRepository memberRepository = MemberRepository.getInstance();
+
+        @Override
+        public ModelView process(Map<String, String> paraMap) {
+            String username = paraMap.get("username");
+            int age = Integer.parseInt(paraMap.get("age"));
+
+            Member member = new Member(username, age);
+            memberRepository.save(member);
+
+            ModelView mv = new ModelView("save-result");
+            mv.getModel().put("member", member);
+            return mv;
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161692489-0ae29782-103a-496c-a12f-7ed2738dcf0a.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161692586-97a9cc10-4d46-4e4a-a522-7019d4540982.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v3.controller;
+
+    import hello.servlet.domain.member.Member;
+    import hello.servlet.domain.member.MemberRepository;
+    import hello.servlet.web.frontcontroller.ModelView;
+    import hello.servlet.web.frontcontroller.v3.ControllerV3;
+
+    import java.util.List;
+    import java.util.Map;
+
+    public class MemberListControllerV3 implements ControllerV3 {
+
+        private MemberRepository memberRepository = MemberRepository.getInstance();
+
+        @Override
+        public ModelView process(Map<String, String> paraMap) {
+
+            List<Member> members = memberRepository.findAll();
+            ModelView mv = new ModelView("members");
+            mv.getModel().put("members", members);
+
+            return mv;
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161692683-2f5f4d89-4ac5-45e1-8e41-76415d45ea52.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v3;
+
+    import hello.servlet.web.frontcontroller.ModelView;
+    import hello.servlet.web.frontcontroller.MyView;
+    import hello.servlet.web.frontcontroller.v3.controller.MemberFormControllerV3;
+    import hello.servlet.web.frontcontroller.v3.controller.MemberListControllerV3;
+    import hello.servlet.web.frontcontroller.v3.controller.MemberSaveControllerV3;
+
+    import javax.servlet.ServletException;
+    import javax.servlet.annotation.WebServlet;
+    import javax.servlet.http.HttpServlet;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+    import java.util.HashMap;
+    import java.util.Map;
+
+    @WebServlet(name = "frontControllerServletV3", urlPatterns = "/front-controller/v3/*")
+    public class FrontControllerServletV3 extends HttpServlet {
+
+        private Map<String, ControllerV3> controllerMap = new HashMap<>();
+
+        public FrontControllerServletV3() {
+            controllerMap.put("/front-controller/v3/members/new-form", new MemberFormControllerV3());
+            controllerMap.put("/front-controller/v3/members/save", new MemberSaveControllerV3());
+            controllerMap.put("/front-controller/v3/members", new MemberListControllerV3());
+        }
+
+        @Override
+        protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+            String requestURI = request.getRequestURI();
+
+            ControllerV3 controller = controllerMap.get(requestURI);
+            if (controller == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+
+            Map<String, String> paramMap = createParamMap(request);
+            ModelView mv = controller.process(paramMap);
+
+            String viewName = mv.getViewName(); //논리이름
+
+            MyView view = viewResolver(viewName);
+            view.render(mv.getModel(), request, response);
+        }
+
+        private MyView viewResolver(String viewName) {
+            return new MyView("/WEB-INF/views/" + viewName + ".jsp");
+        }
+
+        private Map<String, String> createParamMap(HttpServletRequest request) {
+            Map<String, String> paramMap = new HashMap<>();
+            request.getParameterNames().asIterator()
+                    .forEachRemaining(paramName -> paramMap.put(paramName, request.getParameter(paramName)));
+            return paramMap;
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161692898-e34c44cc-1c06-45cd-825a-7358fdecc8a7.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161692984-0646e420-9468-4ca2-a15d-a4bb39b8dee6.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161693159-2a221757-3132-4d13-85b2-f601c5ab738e.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller;
+
+    import javax.servlet.RequestDispatcher;
+    import javax.servlet.ServletException;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+    import java.util.Map;
+
+    public class MyView {
+
+        private String viewPath;
+
+        public MyView(String viewPath) {
+            this.viewPath = viewPath;
+        }
+
+        public void render(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
+            dispatcher.forward(request, response);
+        }
+
+        public void render(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            modelToRequestAttribute(model, request);
+            RequestDispatcher dispatcher = request.getRequestDispatcher(viewPath);
+            dispatcher.forward(request, response);
+        }
+
+        private void modelToRequestAttribute(Map<String, Object> model, HttpServletRequest request) {
+            model.forEach((key, value) -> request.setAttribute(key, value)); //JSP는 여기에서 값을 꺼내기때문에 setAttribute로 데이터 넣어줘야함
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161693273-10788d97-6a11-417b-9751-aff97236ced9.png)
