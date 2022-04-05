@@ -435,7 +435,7 @@
 
     public interface ControllerV3 {
 
-        ModelView process(Map<String, String> paraMap);
+        ModelView process(Map<String, String> paramMap);
     }
     ```
     
@@ -454,7 +454,7 @@
     public class MemberFormControllerV3 implements ControllerV3 {
 
         @Override
-        public ModelView process(Map<String, String> paraMap) {
+        public ModelView process(Map<String, String> paramMap) {
             return new ModelView("new-form");
         }
     }
@@ -479,9 +479,9 @@
         private MemberRepository memberRepository = MemberRepository.getInstance();
 
         @Override
-        public ModelView process(Map<String, String> paraMap) {
-            String username = paraMap.get("username");
-            int age = Integer.parseInt(paraMap.get("age"));
+        public ModelView process(Map<String, String> paramMap) {
+            String username = paramMap.get("username");
+            int age = Integer.parseInt(paramMap.get("age"));
 
             Member member = new Member(username, age);
             memberRepository.save(member);
@@ -513,7 +513,7 @@
         private MemberRepository memberRepository = MemberRepository.getInstance();
 
         @Override
-        public ModelView process(Map<String, String> paraMap) {
+        public ModelView process(Map<String, String> paramMap) {
 
             List<Member> members = memberRepository.findAll();
             ModelView mv = new ModelView("members");
@@ -630,3 +630,176 @@
     ```
     
     ![image](https://user-images.githubusercontent.com/79301439/161693273-10788d97-6a11-417b-9751-aff97236ced9.png)
+
+***
+  * 단순하고 실용적인 컨트롤러 - v4
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161698902-05b10c7f-a809-4c33-8bcb-af199957493f.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161698943-dee04275-3a35-478d-8ad4-b2cd61092e5b.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161698972-cbf2eb0e-129b-4044-87f8-f1145f17aaef.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v4;
+
+    import java.util.Map;
+
+    public interface ControllerV4 {
+
+        /**
+         *
+         * @param paramMap
+         * @param model
+         * @return viewName
+         */
+        String process(Map<String, String> paramMap, Map<String, Object> model);
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161699071-e0f589b5-e26b-4f68-a6d2-eef893957c47.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161699101-6be95fe3-edda-4d90-acd4-4b55f9494c30.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v4.controller;
+
+    import hello.servlet.web.frontcontroller.v4.ControllerV4;
+
+    import java.util.Map;
+
+    public class MemberFormControllerV4 implements ControllerV4 {
+
+        @Override
+        public String process(Map<String, String> paramMap, Map<String, Object> model) {
+            return "new-form";
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161699187-6e4617ab-047f-4d72-bc77-46207274a4ae.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161699218-3a3bcac6-1eba-4914-96e6-1c05524f436a.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v4.controller;
+
+    import hello.servlet.domain.member.Member;
+    import hello.servlet.domain.member.MemberRepository;
+    import hello.servlet.web.frontcontroller.v4.ControllerV4;
+
+    import java.util.Map;
+
+    public class MemberSaveControllerV4 implements ControllerV4 {
+
+        private MemberRepository memberRepository = MemberRepository.getInstance();
+
+        @Override
+        public String process(Map<String, String> paramMap, Map<String, Object> model) {
+            String username = paramMap.get("username");
+            int age = Integer.parseInt(paramMap.get("age"));
+
+            Member member = new Member(username, age);
+            memberRepository.save(member);
+
+            model.put("member", member);
+            return "save-result";
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161699315-1b7d2694-86bb-430f-9e7e-cca533d64a0f.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161699348-4e12462d-0f53-43de-ae94-a430156caece.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v4.controller;
+
+    import hello.servlet.domain.member.Member;
+    import hello.servlet.domain.member.MemberRepository;
+    import hello.servlet.web.frontcontroller.v4.ControllerV4;
+
+    import java.util.List;
+    import java.util.Map;
+
+    public class MemberListControllerV4 implements ControllerV4 {
+
+        private MemberRepository memberRepository = MemberRepository.getInstance();
+
+        @Override
+        public String process(Map<String, String> paramMap, Map<String, Object> model) {
+            List<Member> members = memberRepository.findAll();
+
+            model.put("members", members);
+            return "members";
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161699469-d82fe093-2ff7-47c7-bf75-0e8facd8b96e.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v4;
+
+    import hello.servlet.web.frontcontroller.MyView;
+    import hello.servlet.web.frontcontroller.v4.controller.MemberFormControllerV4;
+    import hello.servlet.web.frontcontroller.v4.controller.MemberListControllerV4;
+    import hello.servlet.web.frontcontroller.v4.controller.MemberSaveControllerV4;
+
+    import javax.servlet.ServletException;
+    import javax.servlet.annotation.WebServlet;
+    import javax.servlet.http.HttpServlet;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+    import java.util.HashMap;
+    import java.util.Map;
+
+    @WebServlet(name = "frontControllerServletV4", urlPatterns = "/front-controller/v4/*")
+    public class FrontControllerServletV4 extends HttpServlet {
+
+        private Map<String, ControllerV4> controllerMap = new HashMap<>();
+
+        public FrontControllerServletV4() {
+            controllerMap.put("/front-controller/v4/members/new-form", new MemberFormControllerV4());
+            controllerMap.put("/front-controller/v4/members/save", new MemberSaveControllerV4());
+            controllerMap.put("/front-controller/v4/members", new MemberListControllerV4());
+        }
+
+        @Override
+        protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+            String requestURI = request.getRequestURI();
+
+            ControllerV4 controller = controllerMap.get(requestURI);
+            if (controller == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+
+            Map<String, String> paramMap = createParamMap(request);
+            Map<String, Object> model = new HashMap<>(); //추가
+
+            String viewName = controller.process(paramMap, model);
+
+            MyView view = viewResolver(viewName);
+
+            view.render(model, request, response);
+        }
+
+        private MyView viewResolver(String viewName) {
+            return new MyView("/WEB-INF/views/" + viewName + ".jsp");
+        }
+
+        private Map<String, String> createParamMap(HttpServletRequest request) {
+            Map<String, String> paramMap = new HashMap<>();
+            request.getParameterNames().asIterator()
+                    .forEachRemaining(paramName -> paramMap.put(paramName, request.getParameter(paramName)));
+            return paramMap;
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161699739-6292a395-3e60-45c5-9754-2eb0dfe3d408.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161699875-b052ebab-c99c-496a-908b-c52da2aba84b.png)
