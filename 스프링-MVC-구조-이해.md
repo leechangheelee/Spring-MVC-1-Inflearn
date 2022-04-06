@@ -132,3 +132,41 @@
     ![image](https://user-images.githubusercontent.com/79301439/161914113-8b1f2d05-8bb9-4350-8b2b-2ab017634c70.png)
     
     ![image](https://user-images.githubusercontent.com/79301439/161914176-afc11f77-abc6-419f-8899-1c13d269be97.png)
+
+***
+  * 뷰 리졸버
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161924786-8a15ad09-5cb4-4a0e-957c-104dd4f0029f.png)
+    
+    ```java
+    package hello.servlet.web.springmvc.old;
+
+    import org.springframework.stereotype.Component;
+    import org.springframework.web.servlet.ModelAndView;
+    import org.springframework.web.servlet.mvc.Controller;
+
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+
+    @Component("/springmvc/old-controller") //빈의 이름을 이렇게 설정하면 호출이 됨
+    public class OldController implements Controller {
+
+        @Override
+        public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            System.out.println("OldController.handleRequest");
+            return new ModelAndView("new-form");
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161924993-a6d89e26-7db0-4b99-8322-9472f7521de8.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161925434-f6c45b0f-dace-4d87-b1eb-f160d903150f.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161926248-80cef7ec-b384-4765-8aea-4c827e207c53.png)
+
+    ![image](https://user-images.githubusercontent.com/79301439/161925576-b51bcfbb-510f-4748-9dae-735efe35ea9c.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161925884-6a6dc631-e697-4438-9b8b-d34208d2ce8d.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161925991-589a2b7c-d5b7-49bb-92be-2e73f3990d9d.png)
