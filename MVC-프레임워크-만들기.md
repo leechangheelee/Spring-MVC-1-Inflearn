@@ -993,3 +993,82 @@
     ![image](https://user-images.githubusercontent.com/79301439/161718509-5a9fc5aa-f93a-4074-a236-d098a7e98162.png)
     
     ![image](https://user-images.githubusercontent.com/79301439/161718566-4ba38b5f-3c89-44f9-a19d-d5114ebcb989.png)
+
+***
+  * 유연한 컨트롤러2 - v5
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161883460-b043f688-6442-4919-8ba4-1f9ba8fbf6a1.png)
+    
+    ```java
+    private void initHandlerMappingMap() {
+        handlerMappingMap.put("/front-controller/v5/v3/members/new-form", new MemberFormControllerV3());
+        handlerMappingMap.put("/front-controller/v5/v3/members/save", new MemberSaveControllerV3());
+        handlerMappingMap.put("/front-controller/v5/v3/members", new MemberListControllerV3());
+
+        //V4 추가
+        handlerMappingMap.put("/front-controller/v5/v4/members/new-form", new MemberFormControllerV4());
+        handlerMappingMap.put("/front-controller/v5/v4/members/save", new MemberSaveControllerV4());
+        handlerMappingMap.put("/front-controller/v5/v4/members", new MemberListControllerV4());
+    }
+
+    private void initHandlerAdapters() {
+        handlerAdapters.add(new ControllerV3HandlerAdapter());
+        handlerAdapters.add(new ControllerV4HandlerAdapter()); //V4 추가
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161883580-d5e382a5-6183-43a9-81eb-e157f0257fd0.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161883604-4d61c0ac-92b5-4a74-99d6-baa2857d3619.png)
+    
+    ```java
+    package hello.servlet.web.frontcontroller.v5.adapter;
+
+    import hello.servlet.web.frontcontroller.ModelView;
+    import hello.servlet.web.frontcontroller.v4.ControllerV4;
+    import hello.servlet.web.frontcontroller.v5.MyHandlerAdapter;
+
+    import javax.servlet.ServletException;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+    import java.util.HashMap;
+    import java.util.Map;
+
+    public class ControllerV4HandlerAdapter implements MyHandlerAdapter {
+
+        @Override
+        public boolean supports(Object handler) {
+            return (handler instanceof ControllerV4);
+        }
+
+        @Override
+        public ModelView handle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException, IOException {
+            ControllerV4 controller = (ControllerV4) handler;
+
+            Map<String, String> paramMap = createParamMap(request);
+            HashMap<String, Object> model = new HashMap<>();
+
+            String viewName = controller.process(paramMap, model);
+            ModelView mv = new ModelView(viewName);
+            mv.setModel(model);
+
+            return mv;
+        }
+
+        private Map<String, String> createParamMap(HttpServletRequest request) {
+            Map<String, String> paramMap = new HashMap<>();
+            request.getParameterNames().asIterator()
+                    .forEachRemaining(paramName -> paramMap.put(paramName, request.getParameter(paramName)));
+            return paramMap;
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161883728-6a965955-a658-488e-94ab-12fac60b8544.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161883760-f207018d-b7ef-4035-ae3c-a5c19ff73eb7.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161883857-c058ff0e-6052-4963-a314-319d402bc6b5.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161883942-bc662820-26b9-48b7-9387-7255d5a69342.png)
