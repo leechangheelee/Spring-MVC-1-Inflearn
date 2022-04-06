@@ -1,4 +1,8 @@
 ## **MVC 프레임워크 만들기**
+
+![image](https://user-images.githubusercontent.com/79301439/161980554-23363a03-fcdf-4076-985a-8d61515d4c07.png)
+
+***
   * 프론트 컨트롤러 패턴 소개
     
     ![image](https://user-images.githubusercontent.com/79301439/161658626-10999f7f-b87a-4829-b4b3-bf88a2ad0215.png)
