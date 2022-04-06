@@ -61,3 +61,74 @@
     ![image](https://user-images.githubusercontent.com/79301439/161902104-73532379-5103-471c-bce5-303d35fd433d.png)
     
     ![image](https://user-images.githubusercontent.com/79301439/161902133-ba850137-144d-4011-8c78-a2316ce52162.png)
+
+***
+  * 핸들러 매핑과 핸들러 어댑터
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161911968-f9ffab68-93dd-4f45-bd13-6183f3c5c38b.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161912024-6fd05297-5cf6-4e60-9b6f-099251abf310.png)
+    
+    ```java
+    package hello.servlet.web.springmvc.old;
+
+    import org.springframework.stereotype.Component;
+    import org.springframework.web.servlet.ModelAndView;
+    import org.springframework.web.servlet.mvc.Controller;
+
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+
+    @Component("/springmvc/old-controller") //빈의 이름을 이렇게 설정하면 호출이 됨
+    public class OldController implements Controller {
+
+        @Override
+        public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            System.out.println("OldController.handleRequest");
+            return null;
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161912154-57ecd5ee-090d-44e4-a77b-1f1c956d0691.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161912377-bf413a53-ad52-4a5e-9385-f83ec0e6c362.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161912552-0aae21cd-01c1-43db-8d30-0cb823a705fa.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161912632-87cdbf50-b5d2-4183-86fd-a157b5fe82f5.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161912968-78561c0d-3a4e-4281-b202-0dc6bed88d7e.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161913030-d7c338e4-87d1-4d26-aae9-db1d001de27a.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161913880-e2ac574e-87a7-4abf-bc7d-86ab4f047317.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161913927-ae431750-3d95-45d9-8e0c-55ba8b70f028.png)
+    
+    ```java
+    package hello.servlet.web.springmvc.old;
+
+    import org.springframework.stereotype.Component;
+    import org.springframework.web.HttpRequestHandler;
+
+    import javax.servlet.ServletException;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+
+    @Component("/springmvc/request-handler")
+    public class MyHttpRequestHandler implements HttpRequestHandler {
+
+        @Override
+        public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            System.out.println("MyHttpRequestHandler.handleRequest");
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161914650-e176a86c-23eb-467a-9849-a0ac633141a2.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161914113-8b1f2d05-8bb9-4350-8b2b-2ab017634c70.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161914176-afc11f77-abc6-419f-8899-1c13d269be97.png)
