@@ -170,3 +170,138 @@
     ![image](https://user-images.githubusercontent.com/79301439/161925884-6a6dc631-e697-4438-9b8b-d34208d2ce8d.png)
     
     ![image](https://user-images.githubusercontent.com/79301439/161925991-589a2b7c-d5b7-49bb-92be-2e73f3990d9d.png)
+
+***
+  * 스프링 MVC - 시작하기
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161949805-a4210212-ed1a-40d2-b15a-05d456941e09.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161949871-17f57520-193c-4778-ac0b-acce84edecd1.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161949975-19a1bab9-a9c5-4089-90b8-3ac73dcfaf30.png)
+    
+    ```java
+    package hello.servlet.web.springmvc.v1;
+
+    import org.springframework.stereotype.Controller;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.servlet.ModelAndView;
+
+    @Controller
+    public class SpringMemberFormControllerV1 {
+
+        @RequestMapping("/springmvc/v1/members/new-form")
+        public ModelAndView process() {
+            return new ModelAndView("new-form");
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161950166-a6ce220e-014f-4207-80c6-97e3fb968472.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161950265-c5745daf-0571-47f8-9adc-856733c0f0f8.png)
+    
+    ```java
+    @Component //컴포넌트 스캔을 통해 스프링 빈으로 등록
+    @RequestMapping
+    public class SpringMemberFormControllerV1 {
+    
+        @RequestMapping("/springmvc/v1/members/new-form")
+        public ModelAndView process() {
+            return new ModelAndView("new-form");
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161950459-63f0ec25-3a66-4567-a6da-4f326708fe1f.png)
+    
+    ```java
+    @RequestMapping
+    public class SpringMemberFormControllerV1 {
+        
+        @RequestMapping("/springmvc/v1/members/new-form")
+        public ModelAndView process() {
+            return new ModelAndView("new-form");
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161950668-1e78b872-58cf-4073-afea-70a223f3ea59.png)
+    
+    ```java
+    //스프링 빈 직접 등록
+    @Bean
+    SpringMemberFormControllerV1 testController() {
+        return new SpringMemberFormControllerV1();
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161951478-c37972af-b214-4e79-ae0d-8dee344ae73b.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161951541-58373b81-df34-441f-8175-fa3f4a4ae977.png)
+    
+    ```java
+    package hello.servlet.web.springmvc.v1;
+
+    import hello.servlet.domain.member.Member;
+    import hello.servlet.domain.member.MemberRepository;
+    import org.springframework.stereotype.Controller;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.servlet.ModelAndView;
+
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+
+    @Controller
+    public class SpringMemberSaveControllerV1 {
+
+        private MemberRepository memberRepository = MemberRepository.getInstance();
+
+        @RequestMapping("/springmvc/v1/members/save")
+        public ModelAndView process(HttpServletRequest request, HttpServletResponse response) {
+            String username = request.getParameter("username");
+            int age = Integer.parseInt(request.getParameter("age"));
+
+            Member member = new Member(username, age);
+            memberRepository.save(member);
+
+            ModelAndView mv = new ModelAndView("save-result");
+            mv.addObject("member", member);
+            return mv;
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161951659-f4d488c7-3571-48f2-a844-d6d17ae7008b.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161951777-744d45c9-a2a7-4aa5-96fa-1f8c2c1c9395.png)
+    
+    ```java
+    package hello.servlet.web.springmvc.v1;
+
+    import hello.servlet.domain.member.Member;
+    import hello.servlet.domain.member.MemberRepository;
+    import org.springframework.stereotype.Controller;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.servlet.ModelAndView;
+
+    import java.util.List;
+
+    @Controller
+    public class SpringMemberFormListControllerV1 {
+
+        private MemberRepository memberRepository = MemberRepository.getInstance();
+
+        @RequestMapping("/springmvc/v1/members")
+        public ModelAndView process() {
+
+            List<Member> members = memberRepository.findAll();
+
+            ModelAndView mv = new ModelAndView("members");
+            mv.addObject("members", members);
+            return mv;
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161951948-9e86eed3-b9ac-4cc4-b772-2bcf37083cc1.png)
