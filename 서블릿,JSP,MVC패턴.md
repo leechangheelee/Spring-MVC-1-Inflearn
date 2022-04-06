@@ -1,4 +1,8 @@
 ## **서블릿, JSP, MVC 패턴**
+
+![image](https://user-images.githubusercontent.com/79301439/161980922-d46e12c0-54e1-4f76-8361-d36f34bed1bb.png)
+
+***
   * 회원 관리 웹 애플리케이션 요구사항
     
     ![image](https://user-images.githubusercontent.com/79301439/161493266-c1536fc1-264d-4bac-a8d0-fcc99dd6a2c0.png)
