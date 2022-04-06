@@ -1,4 +1,8 @@
 ## **스프링 MVC - 구조 이해**
+
+![image](https://user-images.githubusercontent.com/79301439/161980298-d0d0908a-c683-4287-acdf-9933dd693235.png)
+
+***
   * 스프링 MVC 전체 구조
     
     ![image](https://user-images.githubusercontent.com/79301439/161901278-bd225961-2bbd-40c5-bd0e-7eb0cf909f10.png)
