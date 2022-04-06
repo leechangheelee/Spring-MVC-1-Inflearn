@@ -16,3 +16,6 @@
 
 ## **스프링 MVC - 구조 이해**
   * https://github.com/leechangheelee/Spring-MVC-1-Inflearn/blob/main/스프링-MVC-구조-이해.md
+
+## **스프링 MVC - 기본 기능**
+  * https://github.com/leechangheelee/Spring-MVC-1-Inflearn/blob/main/스프링-MVC-기본-기능.md
