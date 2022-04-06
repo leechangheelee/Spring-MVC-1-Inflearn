@@ -305,3 +305,67 @@
     ```
     
     ![image](https://user-images.githubusercontent.com/79301439/161951948-9e86eed3-b9ac-4cc4-b772-2bcf37083cc1.png)
+
+***
+  * 스프링 MVC - 컨트롤러 통합
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161955369-4f3bde61-1753-4e6b-94d9-1d69cebd337c.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161955405-785b8da0-ef74-4f48-a06c-46912a4c7e07.png)
+    
+    ```java
+    package hello.servlet.web.springmvc.v2;
+
+    import hello.servlet.domain.member.Member;
+    import hello.servlet.domain.member.MemberRepository;
+    import org.springframework.stereotype.Controller;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.servlet.ModelAndView;
+
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.util.List;
+
+    /**
+     * 클래스 단위 -> 메서드 단위
+     * @RequestMapping 클래스 레벨과 메서드 레벨 조합
+     */
+    @Controller
+    @RequestMapping("/springmvc/v2/members")
+    public class SpringMemberControllerV2 {
+
+        private MemberRepository memberRepository = MemberRepository.getInstance();
+
+        @RequestMapping("/new-form")
+        public ModelAndView newForm() {
+            return new ModelAndView("new-form");
+        }
+
+        @RequestMapping("/save")
+        public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
+            String username = request.getParameter("username");
+            int age = Integer.parseInt(request.getParameter("age"));
+
+            Member member = new Member(username, age);
+            memberRepository.save(member);
+
+            ModelAndView mv = new ModelAndView("save-result");
+            mv.addObject("member", member);
+            return mv;
+        }
+
+        @RequestMapping
+        public ModelAndView members() {
+
+            List<Member> members = memberRepository.findAll();
+
+            ModelAndView mv = new ModelAndView("members");
+            mv.addObject("members", members);
+            return mv;
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161955900-7cb62e15-3230-4cfe-9f45-168846504cb0.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161956000-a1f0f50e-2840-4db4-9e5c-26ebd0d98d95.png)
