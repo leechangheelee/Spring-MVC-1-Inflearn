@@ -1,4 +1,8 @@
 ## **스프링 MVC - 기본 기능**
+
+![image](https://user-images.githubusercontent.com/79301439/161980057-40e8995f-1b2d-4c1f-bb14-b5718aa27ed1.png)
+
+***
   * 프로젝트 생성
     
     ![image](https://user-images.githubusercontent.com/79301439/161978979-edaab4a8-a412-472f-874d-1335df062e46.png)
