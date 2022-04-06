@@ -369,3 +369,67 @@
     ![image](https://user-images.githubusercontent.com/79301439/161955900-7cb62e15-3230-4cfe-9f45-168846504cb0.png)
     
     ![image](https://user-images.githubusercontent.com/79301439/161956000-a1f0f50e-2840-4db4-9e5c-26ebd0d98d95.png)
+
+***
+  * 스프링 MVC - 실용적인 방식
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161971338-80df1370-625a-48b1-82e7-bac451000b69.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161971441-585543bb-6118-4c8a-a324-7ab074c63612.png)
+    
+    ```java
+    package hello.servlet.web.springmvc.v3;
+
+    import hello.servlet.domain.member.Member;
+    import hello.servlet.domain.member.MemberRepository;
+    import org.springframework.stereotype.Controller;
+    import org.springframework.ui.Model;
+    import org.springframework.web.bind.annotation.*;
+
+    import java.util.List;
+
+    /**
+     * v3
+     * Model 도입
+     * ViewName 직접 반환
+     * @RequestParam 사용
+     * @RequestMapping -> @GetMapping, @PostMapping
+     */
+    @Controller
+    @RequestMapping("/springmvc/v3/members")
+    public class SpringMemberControllerV3 {
+
+        private MemberRepository memberRepository = MemberRepository.getInstance();
+
+        @GetMapping("/new-form")
+        public String newForm() {
+            return "new-form";
+        }
+
+        @PostMapping("/save")
+        public String save(
+                @RequestParam("username") String username,
+                @RequestParam("age") int age,
+                Model model) {
+
+            Member member = new Member(username, age);
+            memberRepository.save(member);
+
+            model.addAttribute("member", member);
+            return "save-result";
+        }
+
+        @GetMapping
+        public String members(Model model) {
+
+            List<Member> members = memberRepository.findAll();
+
+            model.addAttribute("members", members);
+            return "members";
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161971664-4c4e510d-19ab-417c-a3fc-ed0706a4e9cc.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161971706-8f8ab726-dd9c-41d7-97d0-da9111c5cd42.png)
