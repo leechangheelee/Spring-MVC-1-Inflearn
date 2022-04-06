@@ -1072,3 +1072,10 @@
     ![image](https://user-images.githubusercontent.com/79301439/161883857-c058ff0e-6052-4963-a314-319d402bc6b5.png)
     
     ![image](https://user-images.githubusercontent.com/79301439/161883942-bc662820-26b9-48b7-9387-7255d5a69342.png)
+
+***
+  * 정리
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161888109-179b5506-5b08-4cd3-9424-60be9de98a8b.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/161888166-6ba9ba02-e7f2-46e7-a414-64abe0d85697.png)
