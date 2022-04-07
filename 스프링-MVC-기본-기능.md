@@ -725,3 +725,98 @@
     ```
     
     ![image](https://user-images.githubusercontent.com/79301439/162148004-be01a6d5-d13f-4ba5-b7eb-64799a8d6572.png)
+
+***
+  * HTTP 요청 메시지 - 단순 텍스트
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162154359-c38d9970-0f6a-45e4-bbce-b88b42bb7f03.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162154510-51a07e6b-c044-483a-82bd-b40362d40ec2.png)
+    
+    ```java
+    @Slf4j
+    @Controller
+    public class RequestBodyStringController {
+
+        @PostMapping("/request-body-string-v1")
+        public void requestBodyString(HttpServletRequest request, HttpServletResponse response) throws IOException {
+            ServletInputStream inputStream = request.getInputStream();
+            String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+
+            log.info("messageBody={}", messageBody);
+
+            response.getWriter().write("ok");
+        }
+        
+        ...
+        
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162154722-6622a648-1a67-4075-b357-f683d65fbf40.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162154783-5dc10a80-fe95-4148-96b2-8334c5d71b56.png)
+    
+    ```java
+    /**
+     * InputStream(Reader): HTTP 요청 메시지 바디의 내용을 직접 조회
+     * OutputStream(Writer): HTTP 응답 메시지의 바디에 직접 결과 출력
+     */
+    @PostMapping("/request-body-string-v2")
+    public void requestBodyStringV2(InputStream inputStream, Writer responseWriter) throws IOException {
+
+        String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+        log.info("messageBody={}", messageBody);
+        responseWriter.write("ok");
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162154944-a41b7ed7-ed41-40f7-8ff8-1e5983e0690f.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162155004-2ef1a8fe-d4a8-4bd3-a8a2-8b46d8fcd02b.png)
+    
+    ```java
+    /**
+     * HttpEntity: HTTP header, body 정보를 편라하게 조회
+     * - 메시지 바디 정보를 직접 조회(@RequestParam X, @ModelAttribute X)
+     * - HttpMessageConverter 사용 -> StringHttpMessageConverter 적용
+     *
+     * 응답에서도 HttpEntity 사용 가능
+     * - 메시지 바디 정보 직접 반환(view 조회X)
+     * - HttpMessageConverter 사용 -> StringHttpMessageConverter 적용
+     */
+    @PostMapping("/request-body-string-v3")
+    public HttpEntity<String> requestBodyStringV3(HttpEntity<String> httpEntity) throws IOException {
+
+        String messageBody = httpEntity.getBody();
+        log.info("messageBody={}", messageBody);
+
+        return new HttpEntity<>("ok");
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162155323-ef6cf562-4890-406b-ac87-5c0fb9791b50.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162155403-4e635cbe-534d-46db-b3b9-b007b2788522.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162155449-d8921664-6670-48c1-b7e8-0f972183b9c6.png)
+    
+    ```java
+    /**
+     * @RequestBody
+     * - 메시지 바디 정보를 직접 조회(@RequestParam X, @ModelAttribute X)
+     * - HttpMessageConverter 사용 -> StringHttpMessageConverter 적용
+     *
+     * @ResponseBody
+     * - 메시지 바디 정보 직접 반환(view 조회X)
+     * - HttpMessageConverter 사용 -> StringHttpMessageConverter 적용
+     */
+    @ResponseBody
+    @PostMapping("/request-body-string-v4")
+    public String requestBodyStringV4(@RequestBody String messageBody) {
+        log.info("messageBody={}", messageBody);
+        return "ok";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162155627-b50c7d7c-90c8-4938-ba79-503b24999d2d.png)
