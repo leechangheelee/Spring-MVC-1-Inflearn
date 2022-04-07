@@ -950,3 +950,62 @@
     ```
     
     ![image](https://user-images.githubusercontent.com/79301439/162175552-f54a1b07-29d2-4dfe-ad95-2320ad424f73.png)
+
+***
+  * HTTP 응답 - 정적 리소스, 뷰 템플릿
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162182311-20627f8c-ad8d-4639-a3dc-1681112f2e70.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162182415-216f0d48-dfb3-4d44-9f8a-0d46e5c0543f.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162182649-7afa6328-9db3-43f0-88fd-68fa9ba04cbd.png)
+    
+    ```html
+    <!DOCTYPE html>
+    <html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+    <p th:text="${data}">empty</p>
+    </body>
+    </html>
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162182751-13efaea0-e0bc-4858-a819-ddb0abd4b07a.png)
+    
+    ```java
+    package hello.springmvc.basic.response;
+
+    import org.springframework.stereotype.Controller;
+    import org.springframework.ui.Model;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.servlet.ModelAndView;
+
+    @Controller
+    public class ResponseViewController {
+
+        @RequestMapping("/response-view-v1")
+        public ModelAndView responseViewV1() {
+            ModelAndView mav = new ModelAndView("response/hello")
+                    .addObject("data", "hello!");
+            return mav;
+        }
+
+        @RequestMapping("/response-view-v2")
+        public String responseViewV2(Model model) {
+            model.addAttribute("data", "hello!");
+            return "response/hello";
+        }
+
+        @RequestMapping("/response/hello")
+        public void responseViewV3(Model model) {
+            model.addAttribute("data", "hello!");
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162182942-524eadfe-76d6-422e-b5ba-db65ea2a1996.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162183134-89c30437-bca9-42c8-a836-897e4513e5ae.png)
