@@ -372,3 +372,56 @@
     ```
     
     ![image](https://user-images.githubusercontent.com/79301439/162111152-890ba5f5-924d-44ca-a891-f198fe8d09ee.png)
+
+***
+  * 요청 매핑 - API 예시
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162118750-a0b75ff2-b239-4e11-ad6f-f735aee21b87.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162118773-6dfde9a8-2ed8-457e-8d74-6100d1d04d46.png)
+    
+    ```java
+    package hello.springmvc.basic.requestmapping;
+
+    import org.springframework.web.bind.annotation.*;
+
+    @RestController
+    @RequestMapping("/mapping/users")
+    public class MappingClassController {
+
+        /**
+         * 회원 목록 조회: GET /users
+         * 회원 등록: POST /users
+         * 회원 조회: GET /users/{userId}
+         * 회원 수정: PATCH /users/{userId}
+         * 회원 삭제: DELETE /users/{userId}
+         */
+
+        @GetMapping
+        public String user() {
+            return "get users";
+        }
+
+        @PostMapping
+        public String addUser() {
+            return "post user";
+        }
+
+        @GetMapping("/{userId}")
+        public String findUser(@PathVariable String userId) {
+            return "get userId=" + userId;
+        }
+
+        @PatchMapping("/{userId}")
+        public String updateUser(@PathVariable String userId) {
+            return "update userId=" + userId;
+        }
+
+        @DeleteMapping("/{userId}")
+        public String deleteUser(@PathVariable String userId) {
+            return "delete userId=" + userId;
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162118875-6d20e9cd-4067-4341-ada0-30f60f3aa9e5.png)
