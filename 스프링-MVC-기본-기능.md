@@ -1096,3 +1096,24 @@
     ![image](https://user-images.githubusercontent.com/79301439/162193702-cf5f7350-7bad-46cf-906b-36d3b47385e5.png)
     
     ![image](https://user-images.githubusercontent.com/79301439/162193801-43a4e007-a5db-4077-a3df-e45c172b9baa.png)
+
+***
+  * 요청 매핑 헨들러 어뎁터 구조
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162198115-d9a25b0d-1b08-4c5a-9cd6-26c78f318c0f.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162198180-a5181cc4-a3f2-4be6-9739-fdca0991c7ac.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162198333-5537061b-dbb4-4f79-8dde-83580bb4c717.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162198567-6199706d-e184-4935-bf99-c6f2874a045c.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162198645-a66e0921-3b93-40f8-8a89-9caabee234ee.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162198775-60aa5521-9b5b-4130-adaf-50502832eaa5.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162198851-0a51862b-a85b-4982-9377-d61e414a7009.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162199844-f4f39bc0-fc90-43bb-9ebe-43f85d82ef22.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162199996-95184333-5db7-40ae-8a35-bc61ea7218a9.png)
