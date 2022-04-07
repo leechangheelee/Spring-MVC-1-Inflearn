@@ -1009,3 +1009,70 @@
     ![image](https://user-images.githubusercontent.com/79301439/162182942-524eadfe-76d6-422e-b5ba-db65ea2a1996.png)
     
     ![image](https://user-images.githubusercontent.com/79301439/162183134-89c30437-bca9-42c8-a836-897e4513e5ae.png)
+
+***
+  * HTTP 응답 - HTTP API, 메시지 바디에 직접 입력
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162187439-f32ad7d8-a7c3-49a2-822d-0923708825bc.png)
+    
+    ```java
+    package hello.springmvc.basic.response;
+
+    import hello.springmvc.basic.HelloData;
+    import lombok.extern.slf4j.Slf4j;
+    import org.springframework.http.HttpStatus;
+    import org.springframework.http.ResponseEntity;
+    import org.springframework.stereotype.Controller;
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.ResponseBody;
+    import org.springframework.web.bind.annotation.ResponseStatus;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+
+    @Slf4j
+    @Controller
+    //@RestController
+    public class ResponseBodyController {
+
+        @GetMapping("/response-body-string-v1")
+        public void responseBodyV1(HttpServletResponse response) throws IOException {
+            response.getWriter().write("ok");
+        }
+
+        @GetMapping("/response-body-string-v2")
+        public ResponseEntity<String> responseBodyV2() {
+            return new ResponseEntity<String>("ok", HttpStatus.OK);
+        }
+
+        @ResponseBody
+        @GetMapping("/response-body-string-v3")
+        public String responseBodyV3() {
+            return "ok";
+        }
+
+        @GetMapping("/response-body-json-v1")
+        public ResponseEntity<HelloData> responseBodyJsonV1() {
+            HelloData helloData = new HelloData();
+            helloData.setUsername("userA");
+            helloData.setAge(20);
+            return new ResponseEntity<>(helloData, HttpStatus.OK);
+        }
+
+        @ResponseStatus(HttpStatus.OK)
+        @ResponseBody
+        @GetMapping("/response-body-json-v2")
+        public HelloData responseBodyJsonV2() {
+            HelloData helloData = new HelloData();
+            helloData.setUsername("userA");
+            helloData.setAge(20);
+            return helloData;
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162187748-f973b7db-8239-4e59-880a-febb9a55b33f.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162187789-7690960e-fbf5-4801-8bf9-1b6c5ab25e7b.png)
+
