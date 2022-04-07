@@ -137,3 +137,53 @@
     ```
     
     ![image](https://user-images.githubusercontent.com/79301439/161979501-633694b8-ae14-44ac-bb10-3f61f40d3aee.png)
+
+***
+  * 로깅 간단히 알아보기
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162102542-29ebec2d-a94c-4e29-be89-2f5c0b61dcee.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162102705-a966eb4c-500d-43b8-a160-f705b75fdc32.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162102734-d6287aa0-c7da-4a3b-b983-3d1152b3a80d.png)
+    
+    ```java
+    package hello.springmvc.basic;
+
+    import lombok.extern.slf4j.Slf4j;
+    import org.slf4j.Logger;
+    import org.slf4j.LoggerFactory;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RestController;
+
+    //@Slf4j
+    @RestController
+    public class LogTestController {
+
+        //@Slf4j 롬복 쓰면 아래행 생략가능
+        private final Logger log = LoggerFactory.getLogger(getClass());
+
+        @RequestMapping("/log-test")
+        public String logTest() {
+            String name = "Spring";
+
+            log.trace("trace log={}", name);
+            log.debug("debug log={}", name);
+            log.info("info log={}", name);
+            log.warn("warn log={}", name);
+            log.error("error log={}", name);
+
+            //로그를 사용하지 않아도 a+b 계산 로직이 먼저 실행됨, 이런 방식으로 사용하면 X
+            log.debug("String concat log=" + name);
+            return "ok";
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162102880-dc9f8d7f-5653-43b0-a228-cf8ee3e4e4bd.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162102925-d8be873e-35d1-4cc1-bbb8-c35e71ffc77a.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162103012-df166ccd-768f-42c5-9bce-832c92af72f2.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162103079-f3e0a95e-7c05-4fb5-93cc-ec2f9a53f918.png)
