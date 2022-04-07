@@ -820,3 +820,133 @@
     ```
     
     ![image](https://user-images.githubusercontent.com/79301439/162155627-b50c7d7c-90c8-4938-ba79-503b24999d2d.png)
+
+***
+  * HTTP 요청 메시지 - JSON
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162174142-dcd3399f-da69-405c-8ddf-32f68712a609.png)
+    
+    ```java
+    package hello.springmvc.basic.request;
+
+    import com.fasterxml.jackson.databind.ObjectMapper;
+    import hello.springmvc.basic.HelloData;
+    import lombok.extern.slf4j.Slf4j;
+    import org.springframework.http.HttpEntity;
+    import org.springframework.stereotype.Controller;
+    import org.springframework.util.StreamUtils;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.RequestBody;
+    import org.springframework.web.bind.annotation.ResponseBody;
+
+    import javax.servlet.ServletInputStream;
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+    import java.nio.charset.StandardCharsets;
+
+    /**
+     * {"username":"hello", "age":20}
+     * content-type: application/json
+     */
+    @Slf4j
+    @Controller
+    public class RequestBodyJsonController {
+
+        private ObjectMapper objectMapper = new ObjectMapper();
+
+        @PostMapping("/request-body-json-v1")
+        public void requestBodyJsonV1(HttpServletRequest request, HttpServletResponse response) throws IOException {
+            ServletInputStream inputStream = request.getInputStream();
+            String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+
+            log.info("messageBody={}", messageBody);
+            HelloData helloData = objectMapper.readValue(messageBody, HelloData.class);
+            log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+
+            response.getWriter().write("ok");
+        }
+        
+        ...
+        
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162174357-571bc914-80b7-4d02-9754-ffa1f93174e9.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162174430-1f4a9887-b7f2-43fb-84df-019ef4b35c52.png)
+    
+    ```java
+    /**
+     * @RequestBody
+     * HttpMessageConverter 사용 -> StringHttpMessageConverter 적용
+     *
+     * @ResponseBody
+     * - 모든 메서드에 @ResponseBody 적용
+     * - 메시지 바디 정보 직접 반환(view 조회X)
+     * - HttpMessageConverter 사용 -> StringHttpMessageConverter 적용
+     */
+    @ResponseBody
+    @PostMapping("/request-body-json-v2")
+    public String requestBodyJsonV2(@RequestBody String messageBody) throws IOException {
+        log.info("messageBody={}", messageBody);
+        HelloData helloData = objectMapper.readValue(messageBody, HelloData.class);
+        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+
+        return "ok";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162174626-c7144ae9-81eb-4695-98f9-f175268ee760.png)
+    
+    ```java
+    /**
+     * @RequestBody 생략 불가능(@ModelAttribute 가 적용되어 버림)
+     * HttpMessageConverter 사용 -> MappingJackson2HttpMessageConverter (content-type: application/json)
+     *
+     */
+    @ResponseBody
+    @PostMapping("/request-body-json-v3")
+    public String requestBodyJsonV3(@RequestBody HelloData data) {
+        log.info("username={}, age={}", data.getUsername(), data.getAge());
+
+        return "ok";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162174856-b962e096-815f-434d-b8f4-5525ed1ea369.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162175147-6176e158-8b87-4d9c-9747-5455815b2d49.png)
+    
+    ```java
+    @ResponseBody
+    @PostMapping("/request-body-json-v4")
+    public String requestBodyJsonV4(HttpEntity<HelloData> httpEntity) {
+        HelloData data = httpEntity.getBody();
+        log.info("username={}, age={}", data.getUsername(), data.getAge());
+
+        return "ok";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162175359-3a60a93a-56e4-42f7-92c5-2b0854fab4b3.png)
+    
+    ```java
+    /**
+     * @RequestBody 생략 불가능(@ModelAttribute 가 적용되어 버림)
+     * HttpMessageConverter 사용 -> MappingJackson2HttpMessageConverter (content-type: application/json)
+     *
+     * @ResponseBody 적용
+     * - 메시지 바디 정보 직접 반환(view 조회X)
+     * - HttpMessageConverter 사용 -> MappingJackson2HttpMessageConverter 적용
+    (Accept: application/json)
+     */
+    @ResponseBody
+    @PostMapping("/request-body-json-v5")
+    public HelloData requestBodyJsonV5(@RequestBody HelloData data) {
+        log.info("username={}, age={}", data.getUsername(), data.getAge());
+        return data;
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162175552-f54a1b07-29d2-4dfe-ad95-2320ad424f73.png)
