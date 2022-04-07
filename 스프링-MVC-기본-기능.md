@@ -670,3 +670,58 @@
     ```
     
     ![image](https://user-images.githubusercontent.com/79301439/162141166-117939b3-c78c-4b19-99e3-d908c3a09774.png)
+
+***
+  * HTTP 요청 파라미터 - @ModelAttribute
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162147246-46eaa43d-f744-4d97-bf9e-e31f87b34faa.png)
+    
+    ```java
+    package hello.springmvc.basic;
+
+    import lombok.Data;
+
+    @Data
+    public class HelloData {
+        private String username;
+        private int age;
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162147492-cd0c5d04-9fae-4473-9bd5-772aab7af628.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162147536-ca627a17-f49f-4544-857b-0917c5517906.png)
+    
+    ```java
+    /**
+     * @ModelAttribute 사용
+     * 참고: model.addAttribute(helloData) 코드도 함께 자동 적용됨, 뒤에 model을 설명할 때 자세히 설명
+     */
+    @ResponseBody
+    @RequestMapping("/model-attribute-v1")
+    public String modelAttributeV1(@ModelAttribute HelloData helloData) {
+        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+        //log.info("helloData={}", helloData); //toString 자동으로 찍어줌
+        return "ok";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162147746-06f98145-3b92-45fc-956d-850b5ef506b6.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162147860-58e9f5c8-e377-41d7-a4c5-14ac008fc2e3.png)
+    
+    ```java
+    /**
+     * @ModelAttribute 생략 가능
+     * String, int 같은 단순 타입 = @RequestParam
+     * argument resolver 로 지정해둔 타입 외 = @ModelAttribute
+     */
+    @ResponseBody
+    @RequestMapping("/model-attribute-v2")
+    public String modelAttributeV2(HelloData helloData) {
+        log.info("username={}, age={}", helloData.getUsername(), helloData.getAge());
+        return "ok";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162148004-be01a6d5-d13f-4ba5-b7eb-64799a8d6572.png)
