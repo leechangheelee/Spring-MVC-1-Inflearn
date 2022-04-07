@@ -478,3 +478,61 @@
     ![image](https://user-images.githubusercontent.com/79301439/162131860-481732e8-f0b4-4a71-ac00-ae05e73f9ffc.png)
     
     ![image](https://user-images.githubusercontent.com/79301439/162131937-604836e8-b5dd-46ec-895c-2584ea5d08f2.png)
+
+***
+  * HTTP 요청 파라미터 - 쿼리 파라미터, HTML Form
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162133936-7d294058-78a0-4152-a4f4-cae18d538228.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162134019-43ca596f-537b-4893-8b52-cf4b08af4b36.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162134048-53974213-979b-4856-b2e0-c64e377c85dc.png)
+    
+    ```java
+    package hello.springmvc.basic.request;
+
+    import lombok.extern.slf4j.Slf4j;
+    import org.springframework.stereotype.Controller;
+    import org.springframework.web.bind.annotation.RequestMapping;
+
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.io.IOException;
+
+    @Slf4j
+    @Controller
+    public class RequestParamController {
+
+        @RequestMapping("/request-param-v1")
+        public void requestParamV1(HttpServletRequest request, HttpServletResponse response) throws IOException {
+            String username = request.getParameter("username");
+            int age = Integer.parseInt(request.getParameter("age"));
+            log.info("username={}, age={}", username, age);
+
+            response.getWriter().write("ok");
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162134180-a5fa7824-51d0-4831-b7ef-df9b820cf589.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162134229-15b9e71c-3cf3-4e62-992c-fc6cb82f234a.png)
+    
+    ```html
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+    <form action="/request-param-v1" method="post">
+        username: <input type="text" name="username" />
+        age: <input type="text" name="age" />
+        <button type="submit">전송</button>
+    </form>
+    </body>
+    </html>
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162134341-07a2d869-c92b-4988-b8bf-08a8f3ea9103.png)
