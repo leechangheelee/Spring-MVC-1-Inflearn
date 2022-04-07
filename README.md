@@ -19,3 +19,6 @@
 
 ## **스프링 MVC - 기본 기능**
   * https://github.com/leechangheelee/Spring-MVC-1-Inflearn/blob/main/스프링-MVC-기본-기능.md
+
+## **스프링 MVC - 웹 페이지 만들기**
+  * https://github.com/leechangheelee/Spring-MVC-1-Inflearn/blob/main/스프링-MVC-웹-페이지-만들기.md
