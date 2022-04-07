@@ -187,3 +187,188 @@
     ![image](https://user-images.githubusercontent.com/79301439/162103012-df166ccd-768f-42c5-9bce-832c92af72f2.png)
     
     ![image](https://user-images.githubusercontent.com/79301439/162103079-f3e0a95e-7c05-4fb5-93cc-ec2f9a53f918.png)
+
+***
+  * 요청 매핑
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162109908-808dbfeb-40af-42cc-a540-6cf26b9b10df.png)
+    
+    ```java
+    package hello.springmvc.basic.requestmapping;
+
+    import org.slf4j.Logger;
+    import org.slf4j.LoggerFactory;
+    import org.springframework.http.MediaType;
+    import org.springframework.web.bind.annotation.*;
+
+    @RestController
+    public class MappingController {
+
+        private Logger log = LoggerFactory.getLogger(getClass());
+
+        /**
+         * 기본 요청
+         * 둘다 허용 /hello-basic, /hello-basic/
+         * HTTP 메서드 모두 허용 GET, HEAD, POST, PUT, PATCH, DELETE
+         */
+        @RequestMapping("/hello-basic")
+        public String helloBasic() {
+            log.info("helloBasic");
+            return "ok";
+        }
+        
+        ...
+        
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162110113-19763777-16ff-44b6-b107-e834773321ca.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162110155-232385bf-5cc9-44db-be1a-98e0534a50d5.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162110179-44bde390-9a02-4d0f-a3ca-d4aaeeb32f8f.png)
+    
+    ```java
+    /**
+     * method 특정 HTTP 메서드 요청만 허용
+     * GET, HEAD, POST, PUT, PATCH, DELETE
+     */
+    @RequestMapping(value = "/mapping-get-v1", method = RequestMethod.GET)
+    public String mappingGetV1() {
+        log.info("mappingGetV1");
+        return "ok";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162110292-df652cdd-ea30-4d85-abe5-6b37db28bd48.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162110309-eeb7af09-6562-4d7b-8a65-d0b847b9851a.png)
+    
+    ```java
+    /**
+     * 편리한 축약 애노테이션 (코드보기)
+     * @GetMapping
+     * @PostMapping
+     * @PutMapping
+     * @DeleteMapping
+     * @PatchMapping
+     */
+    @GetMapping(value = "/mapping-get-v2")
+    public String mappingGetV2() {
+        log.info("mapping-get-v2");
+        return "ok";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162110407-144cd46e-dd8c-498e-80cf-69abc05643f6.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162111554-b55d21cd-fdd2-4f78-a6ad-396917604d98.png)
+    
+    ```java
+    /**
+     * PathVariable 사용
+     * 변수명이 같으면 생략 가능
+     * @PathVariable("userId") String userId -> @PathVariable userId
+     * /mapping/userA
+     */
+    @GetMapping("/mapping/{userId}")
+    public String mappingPath(@PathVariable("userId") String data) {
+        log.info("mappingPath userId={}", data);
+        return "ok";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162110559-38eb1cb5-9af8-4780-968e-20ea485a6e31.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162110590-e0ad14b2-3af6-4f30-9053-0d589083ff8c.png)
+    
+    ```java
+    /**
+     * PathVariable 사용 다중
+     */
+    @GetMapping("/mapping/users/{userId}/orders/{orderId}")
+    public String mappingPath(@PathVariable String userId, @PathVariable Long orderId) {
+        log.info("mappingPath userId={}, orderId={}", userId, orderId);
+        return "ok";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162110683-12ff4d53-229e-452e-ba73-aefbd014b041.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162110725-337438ac-8c14-4599-8f6e-27fd94666ada.png)
+    
+    ```java
+    /**
+     * 파라미터로 추가 매핑
+     * params="mode",
+     * params="!mode"
+     * params="mode=debug"
+     * params="mode!=debug" (! = )
+     * params = {"mode=debug","data=good"}
+     */
+    @GetMapping(value = "/mapping-param", params = "mode=debug")
+    public String mappingParam() {
+        log.info("mappingParam");
+        return "ok";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162110812-3d16e26f-13ab-4e82-8099-63527034fc45.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162110845-9236887d-09ba-4bb6-bfa2-f69fde3f34b9.png)
+    
+    ```java
+    /**
+     * 특정 헤더로 추가 매핑
+     * headers="mode",
+     * headers="!mode"
+     * headers="mode=debug"
+     * headers="mode!=debug" (! = )
+     */
+    @GetMapping(value = "/mapping-header", headers = "mode=debug")
+    public String mappingHeader() {
+        log.info("mappingHeader");
+        return "ok";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162110905-7c26ac63-f9c7-4f1d-a606-17be002a667a.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162110927-2dee1b3b-822e-470b-b7c3-a83e94f12f66.png)
+    
+    ```java
+    /**
+     * Content-Type 헤더 기반 추가 매핑 Media Type
+     * consumes="application/json"
+     * consumes="!application/json"
+     * consumes="application/*"
+     * consumes="*\/*"
+     * MediaType.APPLICATION_JSON_VALUE
+     */
+    @PostMapping(value = "/mapping-consume", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public String mappingConsumes() {
+        log.info("mappingConsumes");
+        return "ok";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162111062-3b6703bd-f024-44e9-ae30-e7967d9fa0a9.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162111084-aa88da49-abed-4591-880b-c3ca31094c5f.png)
+    
+    ```java
+    /**
+     * Accept 헤더 기반 Media Type
+     * produces = "text/html"
+     * produces = "!text/html"
+     * produces = "text/*"
+     * produces = "*\/*"
+     */
+    @PostMapping(value = "/mapping-produce", produces = MediaType.TEXT_HTML_VALUE)
+    public String mappingProduces() {
+        log.info("mappingProduces");
+        return "ok";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162111152-890ba5f5-924d-44ca-a891-f198fe8d09ee.png)
