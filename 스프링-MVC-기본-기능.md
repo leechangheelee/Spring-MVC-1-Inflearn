@@ -425,3 +425,56 @@
     ```
     
     ![image](https://user-images.githubusercontent.com/79301439/162118875-6d20e9cd-4067-4341-ada0-30f60f3aa9e5.png)
+
+***
+  * HTTP 요청 - 기본, 헤더 조회
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162131605-942dc6b8-7441-43bc-953c-9e8dc80cbaae.png)
+    
+    ```java
+    package hello.springmvc.basic.request;
+
+    import lombok.extern.slf4j.Slf4j;
+    import org.springframework.http.HttpMethod;
+    import org.springframework.util.MultiValueMap;
+    import org.springframework.web.bind.annotation.CookieValue;
+    import org.springframework.web.bind.annotation.RequestHeader;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import java.util.Locale;
+
+    @Slf4j
+    @RestController
+    public class RequestHeaderController {
+
+        @RequestMapping("/headers")
+        public String headers(HttpServletRequest request,
+                              HttpServletResponse response,
+                              HttpMethod httpMethod,
+                              Locale locale,
+                              @RequestHeader MultiValueMap<String, String> headerMap,
+                              @RequestHeader("host") String host,
+                              @CookieValue(value = "myCookie", required = false) String cookie
+                              ) {
+
+            log.info("request={}", request);
+            log.info("response={}", response);
+            log.info("httpMethod={}", httpMethod);
+            log.info("locale={}", locale);
+            log.info("headerMap={}", headerMap);
+            log.info("header host={}", host);
+            log.info("myCookie={}", cookie);
+
+            return "ok";
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162131780-4105c4a0-9480-4bb1-89f4-77e3d02c8c83.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162131860-481732e8-f0b4-4a71-ac00-ae05e73f9ffc.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162131937-604836e8-b5dd-46ec-895c-2584ea5d08f2.png)
