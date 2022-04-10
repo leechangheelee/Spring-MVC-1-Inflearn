@@ -634,3 +634,71 @@
     ```
     
     ![image](https://user-images.githubusercontent.com/79301439/162600097-14930c4f-cca5-489a-b6e9-1ad82f72088c.png)
+
+***
+  * 상품 등록 폼
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162614026-73f2c6c8-9634-48ad-8792-66410dc62dc6.png)
+    
+    ```java
+    @GetMapping("/add")
+    public String addForm() {
+        return "basic/addForm";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162614053-5188e2e5-0017-4287-b2d2-285fd41e3863.png)
+    
+    ```html
+    <!DOCTYPE HTML>
+    <html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <link th:href="@{/css/bootstrap.min.css}"
+                href="../css/bootstrap.min.css" rel="stylesheet">
+        <style>
+     .container {
+     max-width: 560px;
+     }
+     </style>
+    </head>
+    <body>
+    <div class="container">
+        <div class="py-5 text-center">
+            <h2>상품 등록 폼</h2>
+        </div>
+        <h4 class="mb-3">상품 입력</h4>
+        <form action="item.html" th:action method="post">
+            <div>
+                <label for="itemName">상품명</label>
+                <input type="text" id="itemName" name="itemName" class="form-control" placeholder="이름을 입력하세요">
+            </div>
+            <div>
+                <label for="price">가격</label>
+                <input type="text" id="price" name="price" class="form-control"
+                       placeholder="가격을 입력하세요">
+            </div>
+            <div>
+                <label for="quantity">수량</label>
+                <input type="text" id="quantity" name="quantity" class="form-control" placeholder="수량을 입력하세요">
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col">
+                    <button class="w-100 btn btn-primary btn-lg" type="submit">상품
+                        등록</button>
+                </div>
+                <div class="col">
+                    <button class="w-100 btn btn-secondary btn-lg"
+                            onclick="location.href='items.html'"
+                            th:onclick="|location.href='@{/basic/items}'|"
+                            type="button">취소</button>
+                </div>
+            </div>
+        </form>
+    </div> <!-- /container -->
+    </body>
+    </html>
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162614095-e5e93ffd-a76e-4d6f-8cca-99e417a42b7e.png)
