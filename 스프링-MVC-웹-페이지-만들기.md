@@ -784,3 +784,89 @@
     ```
     
     ![image](https://user-images.githubusercontent.com/79301439/162615477-289c2024-81c8-4412-9b0e-9cd91ea1f03d.png)
+
+***
+  * 상품 수정
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162616526-b1bbbb09-5861-457f-8b81-f78fd31bdeee.png)
+    
+    ```java
+    @GetMapping("/{itemId}/edit")
+    public String editForm(@PathVariable Long itemId, Model model) {
+        Item item = itemRepository.findById(itemId);
+        model.addAttribute("item", item);
+        return "basic/editForm";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162616554-303effc5-193b-477d-9ac4-e94971ce024b.png)
+    
+    ```html
+    <!DOCTYPE HTML>
+    <html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <link th:href="@{/css/bootstrap.min.css}"
+                href="../css/bootstrap.min.css" rel="stylesheet">
+        <style>
+     .container {
+     max-width: 560px;
+     }
+     </style>
+    </head>
+    <body>
+    <div class="container">
+        <div class="py-5 text-center">
+            <h2>상품 수정 폼</h2>
+        </div>
+        <form action="item.html" th:action method="post">
+            <div>
+                <label for="id">상품 ID</label>
+                <input type="text" id="id" name="id" class="form-control" value="1" th:value="${item.id}"
+                       readonly>
+            </div>
+            <div>
+                <label for="itemName">상품명</label>
+                <input type="text" id="itemName" name="itemName" class="form-control" value="상품A" th:value="${item.itemName}">
+            </div>
+            <div>
+                <label for="price">가격</label>
+                <input type="text" id="price" name="price" class="form-control"
+                       value="10000" th:value="${item.price}">
+            </div>
+            <div>
+                <label for="quantity">수량</label>
+                <input type="text" id="quantity" name="quantity" class="form-control" value="10" th:value="${item.quantity}">
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col">
+                    <button class="w-100 btn btn-primary btn-lg" type="submit">저장
+                    </button>
+                </div>
+                <div class="col">
+                    <button class="w-100 btn btn-secondary btn-lg"
+                            onclick="location.href='item.html'"
+                            th:onclick="|location.href='@{/basic/items/{itemId}(itemId=${item.id})}'|"
+                            type="button">취소</button>
+                </div>
+            </div>
+        </form>
+    </div> <!-- /container -->
+    </body>
+    </html>
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162616577-e2102b67-f52d-4983-98bf-94bb9025c7f0.png)
+    
+    ```java
+    @PostMapping("/{itemId}/edit")
+    public String edit(@PathVariable Long itemId, @ModelAttribute Item item) {
+        itemRepository.update(itemId, item);
+        return "redirect:/basic/items/{itemId}";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162616645-afc89784-976a-4fe2-8e7d-435c608912c0.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162616658-240ff8d1-8d12-4753-862d-aef2d5af59af.png)
