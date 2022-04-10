@@ -870,3 +870,31 @@
     ![image](https://user-images.githubusercontent.com/79301439/162616645-afc89784-976a-4fe2-8e7d-435c608912c0.png)
     
     ![image](https://user-images.githubusercontent.com/79301439/162616658-240ff8d1-8d12-4753-862d-aef2d5af59af.png)
+
+***
+  * PRG Post/Redirect/Get
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162617182-1d99f1b7-8dfb-464a-901a-93a5b9270852.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162617202-cc0fe6f3-7de3-44e5-9a81-74e7d0125181.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162617213-2c133246-e76e-4f38-ab26-4cf790b3eda3.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162617241-820a6a0f-1edc-4864-a657-b00c51b87de5.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162617255-d75a7e05-2bca-400a-9dc9-d26eafac0219.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162617265-ff9f34ba-02da-4352-acdd-dbbf0c264bd3.png)
+    
+    ```java
+    /**
+     * PRG - Post/Redirect/Get
+     */
+    @PostMapping("/add")
+    public String addItemV5(Item item) {
+        itemRepository.save(item);
+        return "redirect:/basic/items/" + item.getId();
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162617322-fdb874ef-b918-4a25-90ed-7255a032844d.png)
