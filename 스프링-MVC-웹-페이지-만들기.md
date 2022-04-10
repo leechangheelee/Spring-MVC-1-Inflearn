@@ -450,3 +450,111 @@
     </body>
     </html>
     ```
+
+***
+  * 상품 목록 - 타임리프
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162598849-29a69783-e0d0-40b6-b548-49b4f8dffb3a.png)
+    
+    ```java
+    package hello.itemservice.web.basic;
+
+    import hello.itemservice.domain.item.Item;
+    import hello.itemservice.domain.item.ItemRepository;
+    import lombok.RequiredArgsConstructor;
+    import org.springframework.stereotype.Controller;
+    import org.springframework.ui.Model;
+    import org.springframework.web.bind.annotation.GetMapping;
+    import org.springframework.web.bind.annotation.RequestMapping;
+
+    import javax.annotation.PostConstruct;
+    import java.util.List;
+
+    @Controller
+    @RequestMapping("/basic/items")
+    @RequiredArgsConstructor
+    public class BasicItemController {
+
+        private final ItemRepository itemRepository;
+
+        @GetMapping
+        public String items(Model model) {
+            List<Item> items = itemRepository.findAll();
+            model.addAttribute("items", items);
+            return "basic/items";
+        }
+
+        /**
+         * 테스트용 데이터 추가
+         */
+        @PostConstruct
+        public void init() {
+            itemRepository.save(new Item("itemA", 100000, 10));
+            itemRepository.save(new Item("itemB", 200000, 20));
+        }
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162599007-ab33a52a-3aa9-4626-bf5e-097cedb98689.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162598883-5e188a93-df7f-4903-a13f-21f311528b0a.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162598890-79aeccb0-d14c-4010-8c33-916d9d392426.png)
+    
+    ```html
+    <!DOCTYPE HTML>
+    <html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <link th:href="@{/css/bootstrap.min.css}"
+                href="../css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+    <div class="container" style="max-width: 600px">
+        <div class="py-5 text-center">
+            <h2>상품 목록</h2>
+        </div>
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-primary float-end"
+                        onclick="location.href='addForm.html'"
+                        th:onclick="|location.href='@{/basic/items/add}'|"
+                        type="button">상품
+                    등록</button>
+            </div>
+        </div>
+        <hr class="my-4">
+        <div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>상품명</th>
+                    <th>가격</th>
+                    <th>수량</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${items}">
+                    <td><a href="item.html" th:href="@{/basic/items/{itemId}(itemId=${item.id})}" th:text="${item.id}">회원id</a></td>
+                    <td><a href="item.html" th:href="@{|/basic/items/${item.id}|}" th:text="${item.itemName}">상품명</a></td>
+                    <td th:text="${item.price}">10000</td>
+                    <td th:text="${item.quantity}">10</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div> <!-- /container -->
+    </body>
+    </html>
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162598931-633b25eb-3b15-49f9-a881-0de94e9aff43.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162598947-5dba4c8c-f854-4db0-9794-d0f9d1a318f9.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162598954-856e939d-1cd4-4fae-91a7-64255abbae8a.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162598968-1f4683d5-9708-4969-83aa-da3532b5834c.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162598973-30d61dcd-bdad-4294-acac-8287f30bc016.png)
