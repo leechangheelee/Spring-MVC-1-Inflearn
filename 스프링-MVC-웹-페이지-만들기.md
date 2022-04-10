@@ -702,3 +702,85 @@
     ```
     
     ![image](https://user-images.githubusercontent.com/79301439/162614095-e5e93ffd-a76e-4d6f-8cca-99e417a42b7e.png)
+
+***
+  * 상품 등록 처리 - @ModelAttribute
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162615093-9e4e9c21-4fa3-4f5f-99ff-d3f54d67718d.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162615100-6b61f7cc-5786-4459-9fdc-979d5b2ad8b9.png)
+    
+    ```java
+    @PostMapping("/add")
+    public String addItemV1(@RequestParam String itemName,
+                       @RequestParam int price,
+                       @RequestParam Integer quantity,
+                       Model model) {
+
+        Item item = new Item();
+        item.setItemName(itemName);
+        item.setPrice(price);
+        item.setQuantity(quantity);
+
+        itemRepository.save(item);
+
+        model.addAttribute("item", item);
+
+        return "basic/item";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162615169-d62d678e-dcd8-4aee-b8b0-a24d1d7d5d6b.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162615183-df8e75a3-b079-4590-9230-88dc0c02f861.png)
+    
+    ```java
+    /**
+     * @ModelAttribute("item") Item item
+     * model.addAttribute("item", item); 자동 추가
+     */
+    @PostMapping("/add")
+    public String addItemV2(@ModelAttribute("item") Item item, Model model) {
+        itemRepository.save(item);
+        //model.addAttribute("item", item); //자동 추가, 생략 가능
+
+        return "basic/item";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162615286-04e091f4-08ee-4310-9acb-6f6e1a544417.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162615330-6716f8eb-bb47-421a-9f52-21a61650df25.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162615355-7a118986-4971-47ac-be76-e91ab31e919e.png)
+    
+    ```java
+    /**
+     * @ModelAttribute name 생략 가능
+     * model.addAttribute(item); 자동 추가, 생략 가능
+     * 생략시 model에 저장되는 name은 클래스명 첫글자만 소문자로 등록 Item -> item
+     */
+    @PostMapping("/add")
+    public String addItemV3(@ModelAttribute Item item) {
+        itemRepository.save(item);
+        return "basic/item";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162615422-b38a4948-e494-4f7e-86a4-ea82d544c9f3.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162615438-83b41f70-f97a-4c79-a042-e0fce4633e5b.png)
+    
+    ```java
+    /**
+     * @ModelAttribute 자체 생략 가능
+     * model.addAttribute(item) 자동 추가
+     */
+    @PostMapping("/add")
+    public String addItemV4(Item item) {
+        itemRepository.save(item);
+        return "basic/item";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162615477-289c2024-81c8-4412-9b0e-9cd91ea1f03d.png)
