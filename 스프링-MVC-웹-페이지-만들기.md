@@ -898,3 +898,43 @@
     ```
     
     ![image](https://user-images.githubusercontent.com/79301439/162617322-fdb874ef-b918-4a25-90ed-7255a032844d.png)
+
+***
+  * RedirectAttributes
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162617990-2ac40e01-cffb-42f1-978e-4b5f943221c9.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162618001-37133bad-04e8-44f5-8532-4e0b37fbd1c1.png)
+    
+    ```java
+    /**
+     * RedirectAttributes
+     */
+    @PostMapping("/add")
+    public String addItemV6(Item item, RedirectAttributes redirectAttributes) {
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+        return "redirect:/basic/items/{itemId}";
+    }
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162618077-a885b4af-ca6c-4a41-ab8b-49384512b9ca.png)
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162618104-85591ca3-65eb-4331-8840-413880d4c9d6.png)
+    
+    ```html
+    ...
+    
+    <div class="container">    
+        <div class="py-5 text-center">
+            <h2>상품 상세</h2>
+        </div>
+
+        <!-- 추가 -->
+        <h2 th:if="${param.status}" th:text="'저장 완료'"></h2> 
+    
+    ...
+    ```
+    
+    ![image](https://user-images.githubusercontent.com/79301439/162618160-c27fac1d-11af-4099-92c7-fee2ddfaca50.png)
